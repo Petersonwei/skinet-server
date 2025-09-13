@@ -13,3 +13,6 @@
 /Users/peterwei/Documents/Dev/Udemy/skishop/Infrastructure/obj/Debug/net8.0/refint/Infrastructure.dll
 /Users/peterwei/Documents/Dev/Udemy/skishop/Infrastructure/obj/Debug/net8.0/Infrastructure.pdb
 /Users/peterwei/Documents/Dev/Udemy/skishop/Infrastructure/obj/Debug/net8.0/ref/Infrastructure.dll
+/Users/peterwei/Documents/Dev/Udemy/skishop/Infrastructure/obj/Debug/net8.0/Infrastructure.sourcelink.json
+/Users/peterwei/Documents/Dev/Udemy/skishop/Infrastructure/bin/Debug/net8.0/Infrastructure.runtimeconfig.json
+/Users/peterwei/Documents/Dev/Udemy/skishop/Infrastructure/obj/Debug/net8.0/Infrastructure.genruntimeconfig.cache

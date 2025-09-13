@@ -9,3 +9,4 @@
 /Users/peterwei/Documents/Dev/Udemy/skishop/Core/obj/Debug/net8.0/refint/Core.dll
 /Users/peterwei/Documents/Dev/Udemy/skishop/Core/obj/Debug/net8.0/Core.pdb
 /Users/peterwei/Documents/Dev/Udemy/skishop/Core/obj/Debug/net8.0/ref/Core.dll
+/Users/peterwei/Documents/Dev/Udemy/skishop/Core/obj/Debug/net8.0/Core.sourcelink.json

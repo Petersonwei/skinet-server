@@ -8,8 +8,8 @@ public interface IProductRepository
     Task<IReadOnlyList<Product>> GetProductsAsync();
     Task<Product?> GetProductByIdAsync(int id);
     void AddProduct(Product product);
-    Oid UpdateProuct(Product product);
+    void UpdateProduct(Product product);
     void DeleteProduct(Product product);
     bool ProductExists(int id);
-    Task<bool> SaveAllAsync();
+    Task<bool> SaveChangesAsync();
 }

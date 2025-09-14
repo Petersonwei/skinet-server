@@ -1,7 +1,5 @@
-using System.Security.Cryptography;
 using Core.Entities;
 using Core.Interfaces;
-using Humanizer;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
@@ -34,7 +32,7 @@ public class ProductRepository(StoreContext context) : IProductRepository
         return context.Products.Any(x => x.Id == id);
     }
 
-    public async Task<bool> SaveAChangesAsync()
+    public async Task<bool> SaveChangesAsync()
     {
         return await context.SaveChangesAsync() > 0;
     }

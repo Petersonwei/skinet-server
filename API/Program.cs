@@ -33,4 +33,18 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+try
+{
+    using var scoper = app.Services.CreateScope();
+    var services = scoper.ServiceProvider;
+    var context = services.GetRequiredService<StoreContext>();
+    await StoreContextSeed.SeedAsync(context);
+
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex);
+    throw;
+}
+
 app.Run();

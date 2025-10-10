@@ -93,5 +93,4 @@ public class ProductsController(IGenericRepository<Product> repo) : ControllerBa
         return repo.Exists(id);
     }
 
-    
 }

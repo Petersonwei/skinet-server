@@ -1,3 +1,4 @@
+using API.DTOs;
 using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,7 +37,7 @@ public class BuggyController : BaseApiController
     }
 
     [HttpGet("validationerror")]
-    public ActionResult GetValidationError(Product product)
+    public ActionResult GetValidationError(CreateProductDto product)
     {
         return Ok();
     }

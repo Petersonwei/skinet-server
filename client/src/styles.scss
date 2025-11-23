@@ -1,10 +1,6 @@
 // @use rules must be at the top
+@use './tailwind';
 @use '@angular/material' as mat;
-
-// Tailwind directives
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 // Include theming for Angular Material with `mat.theme()`.
 // This Sass mixin will define CSS variables that are used for styling Angular Material

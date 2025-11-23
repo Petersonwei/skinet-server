@@ -298,3 +298,87 @@ The correct solution requires:
 *Generated on: November 23, 2025*
 *Angular Version: 20.3.0*
 *Tailwind CSS Version: 3.4.18 (working) / 4.1.17 (incompatible)*
+
+
+References:
+How to Resolve Angular 20 + Tailwind v4 - Working Solutions
+Based on current community experience (November 2025), here are the working approaches and best practices:
+
+✅ Solution 1: The Official Angular + Tailwind v4 Method (Recommended)
+This is what Angular's official docs and the community recommend:​
+
+Step-by-step:
+1. Install packages
+
+bash
+npm install tailwindcss @tailwindcss/postcss postcss --force
+2. Create .postcssrc.json in project root (note the leading dot!)
+
+json
+{
+  "plugins": {
+    "@tailwindcss/postcss": {}
+  }
+}
+3. Create a dedicated Tailwind CSS file (src/tailwind.css)
+
+css
+@import "tailwindcss";
+4. Import it in your global styles:
+
+If using CSS (src/styles.css):
+
+css
+@import "./tailwind.css";
+If using SCSS (src/styles.scss):
+
+text
+@use "./tailwind";
+5. Start dev server
+
+bash
+ng serve
+⚠️ Critical Issues to Avoid
+Issue 1: Missing the dot in config filename
+❌ postcssrc.json
+✅ .postcssrc.json
+
+This is the #1 reason it fails. Angular's PostCSS loader specifically looks for .postcssrc.json with the leading dot.​
+
+Issue 2: Using SCSS with @tailwind directives
+The old v3 syntax doesn't work in v4:
+
+text
+/* ❌ DON'T USE THIS IN V4 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+v4 uses CSS imports:
+
+css
+/* ✅ USE THIS IN V4 */
+@import "tailwindcss";
+Issue 3: Mixing SCSS features with Tailwind v4
+Tailwind v4 has deprecated preprocessor support. If you're using:​
+
+@apply in .scss files
+
+SCSS variables mixed with Tailwind
+
+SCSS nesting with Tailwind utilities
+
+You may hit compatibility issues. The workaround:
+
+Create separate CSS file for Tailwind, import in SCSS:
+
+text
+src/
+  ├── tailwind.css          # Pure CSS with @import "tailwindcss"
+  └── styles.scss           # Your SCSS that imports tailwind
+styles.scss:
+
+text
+@use './tailwind';         // Import Tailwind
+@use '@angular/material' as mat;  // Your other imports
+
+// Your custom SCSS here

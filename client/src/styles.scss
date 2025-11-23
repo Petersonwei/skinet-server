@@ -39,3 +39,14 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+// Custom Angular Material overrides
+.mat-mdc-button,
+.mat-mdc-outlined-button,
+.mat-mdc-raised-button {
+  border-radius: 6px !important;
+}
+
+.mat-badge-content {
+  background-color: #2196f3 !important;
+}

@@ -1,4 +1,12 @@
 <app-header></app-header>
 
-<h1>Hello, {{ title }}</h1>
+<div class="container mt-6">
+  <h2>Hello, {{ title }}</h2>
+  <ul>
+    @for (product of products; track product.id) {
+      <li>{{ product.name }}</li>
+    }
+  </ul>
+</div>
+
 <router-outlet></router-outlet>

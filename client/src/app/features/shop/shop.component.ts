@@ -4,19 +4,26 @@ import { Product } from '../../shared/models/product';
 import { Pagination } from '../../shared/models/pagination';
 import { ProductItemComponent } from './product-item/product-item.component';
 import { ShopService } from '../../shared/services/shop.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { FiltersDialogComponent } from './filters-dialog/filters-dialog.component';
 
 @Component({
   selector: 'app-shop',
-  imports: [ProductItemComponent],
+  imports: [ProductItemComponent, MatButton, MatIcon],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss'
 })
 export class ShopComponent implements OnInit {
   baseUrl = 'http://localhost:5024/api/';
   products: Product[] = [];
+  selectedBrands: string[] = [];
+  selectedTypes: string[] = [];
 
   private http = inject(HttpClient);
   private shopService = inject(ShopService);
+  private dialogService = inject(MatDialog);
 
   ngOnInit(): void {
     this.initializeShop();
@@ -34,6 +41,26 @@ export class ShopComponent implements OnInit {
       },
       complete: () => {
         console.log('complete');
+      }
+    });
+  }
+
+  openFiltersDialog() {
+    const dialogRef = this.dialogService.open(FiltersDialogComponent, {
+      minWidth: '500px',
+      data: {
+        selectedBrands: this.selectedBrands,
+        selectedTypes: this.selectedTypes
+      }
+    });
+
+    dialogRef.afterClosed().subscribe({
+      next: (result) => {
+        if (result) {
+          console.log(result);
+          this.selectedBrands = result.selectedBrands;
+          this.selectedTypes = result.selectedTypes;
+        }
       }
     });
   }

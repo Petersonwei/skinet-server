@@ -32,7 +32,7 @@ export class ShopComponent implements OnInit {
   initializeShop() {
     this.shopService.getBrands();
     this.shopService.getTypes();
-    this.http.get<Pagination<Product>>(this.baseUrl + 'products?pageSize=20').subscribe({
+    this.shopService.getProducts().subscribe({
       next: (response) => {
         this.products = response.data;
       },
@@ -60,6 +60,14 @@ export class ShopComponent implements OnInit {
           console.log(result);
           this.selectedBrands = result.selectedBrands;
           this.selectedTypes = result.selectedTypes;
+          this.shopService.getProducts(this.selectedBrands, this.selectedTypes).subscribe({
+            next: (response) => {
+              this.products = response.data;
+            },
+            error: (error) => {
+              console.log(error);
+            }
+          });
         }
       }
     });

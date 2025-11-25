@@ -82,7 +82,7 @@ public class ProductsController(IGenericRepository<Product> repo) : BaseApiContr
     {
         var spec = new BrandListSpecification();
 
-        return Ok(repo.ListAsync(spec));
+        return Ok(await repo.ListAsync(spec));
     }
 
     [HttpGet("types")]

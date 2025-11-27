@@ -37,7 +37,8 @@ export class ShopService {
   getProducts(shopParams: ShopParams) {
     let params = new HttpParams();
 
-    params = params.append('pageSize', '20');
+    params = params.append('pageSize', shopParams.pageSize.toString());
+    params = params.append('pageIndex', shopParams.pageNumber.toString());
 
     if (shopParams.brands.length > 0) {
       params = params.append('brands', shopParams.brands.join(','));

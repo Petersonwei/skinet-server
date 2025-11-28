@@ -50,3 +50,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-badge-content {
   background-color: #2196f3 !important;
 }
+
+.match-input-height {
+  height: var(--mat-form-field-container-height) !important;
+}

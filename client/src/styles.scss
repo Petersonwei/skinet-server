@@ -99,13 +99,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 // Snack bar styling
 .snack-error {
-  @include mat.button-color($button-color: white);
-  @include mat.snack-bar-color($container-color: red);
-  @include mat.snack-bar-text-color($text-color: white);
+  --mdc-snackbar-container-color: red !important;
+  --mdc-snackbar-supporting-text-color: white !important;
+  --mdc-snackbar-action-label-text-color: white !important;
 }
 
 .snack-success {
-  @include mat.button-color($button-color: white);
-  @include mat.snack-bar-color($container-color: green);
-  @include mat.snack-bar-text-color($text-color: white);
+  --mdc-snackbar-container-color: green !important;
+  --mdc-snackbar-supporting-text-color: white !important;
+  --mdc-snackbar-action-label-text-color: white !important;
 }

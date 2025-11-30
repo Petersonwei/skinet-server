@@ -96,3 +96,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     background-color: rgba(124, 58, 237, 0.04) !important;
   }
 }
+
+// Snack bar styling
+.snack-error {
+  @include mat.button-color($button-color: white);
+  @include mat.snack-bar-color($container-color: red);
+  @include mat.snack-bar-text-color($text-color: white);
+}
+
+.snack-success {
+  @include mat.button-color($button-color: white);
+  @include mat.snack-bar-color($container-color: green);
+  @include mat.snack-bar-text-color($text-color: white);
+}

@@ -2,17 +2,19 @@ import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
+import { SnackBarService } from '../services/snack-bar.service';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
+  const snackBar = inject(SnackBarService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 400) {
-        alert(error.error.title || error.error);
+        snackBar.error(error.error.title || error.error);
       }
       if (error.status === 401) {
-        alert(error.error.title || error.error);
+        snackBar.error(error.error.title || error.error);
       }
       if (error.status === 404) {
         router.navigateByUrl('/not-found');

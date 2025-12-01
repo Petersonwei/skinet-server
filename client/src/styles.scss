@@ -96,3 +96,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     background-color: rgba(124, 58, 237, 0.04) !important;
   }
 }
+
+// Snack bar styling
+.snack-error {
+  --mdc-snackbar-container-color: red !important;
+  --mdc-snackbar-supporting-text-color: white !important;
+  --mdc-snackbar-action-label-text-color: white !important;
+}
+
+.snack-success {
+  --mdc-snackbar-container-color: green !important;
+  --mdc-snackbar-supporting-text-color: white !important;
+  --mdc-snackbar-action-label-text-color: white !important;
+}

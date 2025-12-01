@@ -1,4 +1,4 @@
-<header class="shadow-md p-3 w-full">
+<header class="shadow-md p-3 w-full max-h-20 fixed top-0 z-50 bg-white">
     <div class="flex items-center justify-between max-w-screen-2xl mx-auto">
         <a routerLink="/">
             <img src="/images/logo.png" alt="app Logo" class="max-h-16">
@@ -11,7 +11,9 @@
             <a routerLink="/shop"
                routerLinkActive="active"
                class="mr-4 hover:underline">Shop</a>
-            <a routerLink="/contact" class="hover:underline">Contact</a>
+            <a routerLink="/test-error"
+               routerLinkActive="active"
+               class="hover:underline">Errors</a>
         </nav>
         <div class="flex gap-3 items-center">
             <a matBadge="5" matBadgeSize="large" class="custom-badge mt-2 mr-2 cursor-pointer">
@@ -22,3 +24,7 @@
         </div>
     </div>
 </header>
+
+@if (busyService.loading) {
+  <mat-progress-bar mode="indeterminate" class="fixed top-20 z-50"></mat-progress-bar>
+}

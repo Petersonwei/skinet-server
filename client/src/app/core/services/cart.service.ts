@@ -11,7 +11,7 @@ import { Product } from '../../shared/models/product';
 export class CartService {
   baseUrl = 'http://localhost:5024/api/';
   private http = inject(HttpClient);
-  private cart = signal<CartType | null>(null);
+  cart = signal<CartType | null>(null);
 
   itemCount = computed(() => {
     return this.cart()?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;

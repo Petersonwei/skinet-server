@@ -7,3 +7,9 @@
 .text-primary {
   @apply text-blue-700;
 }
+
+@layer base {
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+}

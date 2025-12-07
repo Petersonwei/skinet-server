@@ -1,4 +1,4 @@
-import { Injectable, signal, inject } from '@angular/core';
+import { Injectable, signal, inject, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -12,6 +12,10 @@ export class CartService {
   baseUrl = 'http://localhost:5024/api/';
   private http = inject(HttpClient);
   private cart = signal<CartType | null>(null);
+
+  itemCount = computed(() => {
+    return this.cart()?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+  });
 
   getCart(id: string): Observable<CartType> {
     return this.http.get<CartType>(this.baseUrl + 'cart?id=' + id).pipe(

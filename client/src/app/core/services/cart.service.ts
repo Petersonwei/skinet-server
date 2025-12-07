@@ -1,4 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Cart, CartItem, CartType } from '../../shared/models/cart';
 import { Product } from '../../shared/models/product';
 
@@ -6,7 +9,22 @@ import { Product } from '../../shared/models/product';
   providedIn: 'root'
 })
 export class CartService {
+  baseUrl = 'http://localhost:5024/api/';
+  private http = inject(HttpClient);
   private cart = signal<CartType | null>(null);
+
+  getCart(id: string): Observable<CartType> {
+    return this.http.get<CartType>(this.baseUrl + 'cart?id=' + id).pipe(
+      map(cart => {
+        this.cart.set(cart);
+        return cart;
+      })
+    );
+  }
+
+  setCart(cart: CartType): Observable<CartType> {
+    return this.http.post<CartType>(this.baseUrl + 'cart', cart);
+  }
 
   addItemToCart(item: CartItem | Product, quantity = 1) {
     const cart = this.cart() ?? this.createCart();
@@ -16,7 +34,9 @@ export class CartService {
     }
 
     cart.items = this.addOrUpdateItem(cart.items, item, quantity);
-    this.cart.set(cart);
+    this.setCart(cart).subscribe({
+      next: cart => this.cart.set(cart)
+    });
   }
 
   private createCart(): Cart {

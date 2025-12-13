@@ -1,4 +1,5 @@
 using API.DTOs;
+using API.Extensions;
 using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -48,13 +49,7 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
             return NoContent();
         }
 
-        var user = await signInManager.UserManager.Users
-            .FirstOrDefaultAsync(x => x.Email == User.FindFirstValue(ClaimTypes.Name));
-
-        if (user == null)
-        {
-            return Unauthorized();
-        }
+        var user = await signInManager.UserManager.GetUserByEmail(User);
 
         return Ok(new
         {

@@ -1,7 +1,10 @@
 using API.DTOs;
 using Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace API.Controllers;
 
@@ -26,5 +29,47 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
         }
 
         return Ok();
+    }
+
+    [HttpPost("logout")]
+    [Authorize]
+    public async Task<ActionResult> Logout()
+    {
+        await signInManager.SignOutAsync();
+
+        return NoContent();
+    }
+
+    [HttpGet("user-info")]
+    public async Task<ActionResult> GetUserInfo()
+    {
+        if (User.Identity?.IsAuthenticated == false)
+        {
+            return NoContent();
+        }
+
+        var user = await signInManager.UserManager.Users
+            .FirstOrDefaultAsync(x => x.Email == User.FindFirstValue(ClaimTypes.Name));
+
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
+        return Ok(new
+        {
+            user.FirstName,
+            user.LastName,
+            user.Email
+        });
+    }
+
+    [HttpGet("auth-state")]
+    public ActionResult GetAuthState()
+    {
+        return Ok(new
+        {
+            isAuthenticated = User.Identity?.IsAuthenticated ?? false
+        });
     }
 }

@@ -49,33 +49,20 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
     [HttpGet("user-info")]
     public async Task<ActionResult> GetUserInfo()
     {
-        Console.WriteLine($"GetUserInfo called. IsAuthenticated: {User.Identity?.IsAuthenticated}");
-        Console.WriteLine($"Authentication type: {User.Identity?.AuthenticationType}");
-        Console.WriteLine($"User claims: {string.Join(", ", User.Claims.Select(c => $"{c.Type}:{c.Value}"))}");
-
         if (User.Identity?.IsAuthenticated != true)
         {
-            Console.WriteLine("User is not authenticated");
             return Unauthorized();
         }
 
-        try
-        {
-            var user = await signInManager.UserManager.GetUserByEmailWithAddress(User);
+        var user = await signInManager.UserManager.GetUserByEmailWithAddress(User);
 
-            return Ok(new
-            {
-                user.FirstName,
-                user.LastName,
-                user.Email,
-                Address = user.Address?.ToDto()
-            });
-        }
-        catch (Exception ex)
+        return Ok(new
         {
-            Console.WriteLine($"Error in GetUserInfo: {ex.Message}");
-            return BadRequest($"Error getting user info: {ex.Message}");
-        }
+            user.FirstName,
+            user.LastName,
+            user.Email,
+            Address = user.Address?.ToDto()
+        });
     }
 
     [HttpGet("auth-state")]

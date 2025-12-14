@@ -15,14 +15,7 @@ export class AccountService {
   login(values: any) {
     let params = new HttpParams();
     params = params.append('useCookies', true);
-    return this.http.post(this.baseUrl + 'login', values, { params, observe: 'response', withCredentials: true }).pipe(
-      map(response => {
-        console.log('Login API successful:', response.status);
-        console.log('Response headers:', response.headers.keys().map(key => `${key}: ${response.headers.get(key)}`));
-        console.log('Set-Cookie headers:', response.headers.getAll('set-cookie'));
-        return null;
-      })
-    );
+    return this.http.post(this.baseUrl + 'login', values, { params, withCredentials: true });
   }
 
   register(values: any) {
@@ -30,17 +23,12 @@ export class AccountService {
   }
 
   getUserInfo() {
-    return this.http.get<User>(this.baseUrl + 'account/user-info', { observe: 'response', withCredentials: true }).pipe(
-      map(response => {
-        console.log('getUserInfo successful:', response.status);
-        console.log('getUserInfo body:', response.body);
-        const user = response.body!;
+    return this.http.get<User>(this.baseUrl + 'account/user-info', { withCredentials: true }).pipe(
+      map(user => {
         this.currentUser.set(user);
         return user;
       }),
-      catchError(error => {
-        console.log('getUserInfo failed:', error.status, error.statusText);
-        console.log('getUserInfo error details:', error.error);
+      catchError(() => {
         this.currentUser.set(null);
         return of(null);
       })

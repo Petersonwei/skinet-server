@@ -1,12 +1,11 @@
 using System.Text.Json;
 using Core.Entities;
-using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Data;
 
 public class StoreContextSeed
 {
-    public static async Task SeedAsync(StoreContext context, UserManager<AppUser> userManager)
+    public static async Task SeedAsync(StoreContext context)
     {
         if (!context.Products.Any())
         {
@@ -18,28 +17,6 @@ public class StoreContextSeed
 
             context.Products.AddRange(products);
             await context.SaveChangesAsync();
-        }
-
-        if (!userManager.Users.Any())
-        {
-            var user = new AppUser
-            {
-                FirstName = "Test",
-                LastName = "User",
-                Email = "test@example.com",
-                UserName = "test@example.com",
-                EmailConfirmed = true
-            };
-
-            var result = await userManager.CreateAsync(user, "Pa$$w0rd");
-            if (result.Succeeded)
-            {
-                Console.WriteLine("Test user created successfully");
-            }
-            else
-            {
-                Console.WriteLine($"Failed to create test user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
-            }
         }
     }
 }

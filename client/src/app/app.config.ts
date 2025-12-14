@@ -4,6 +4,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { errorInterceptor } from './core/interceptors/error-interceptor';
 import { loadingInterceptor } from './core/interceptors/loading-interceptor';
+import { authInterceptor } from './core/interceptors/auth-interceptor';
 import { provideAppInitializer } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { InitService } from './core/services/init.service';
@@ -15,7 +16,11 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([loadingInterceptor, errorInterceptor])),
+    provideHttpClient(withInterceptors([
+      loadingInterceptor,
+      errorInterceptor,
+      authInterceptor
+    ])),
     {
       provide: MAT_DIALOG_DEFAULT_OPTIONS,
       useValue: {

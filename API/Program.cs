@@ -3,7 +3,10 @@ using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -30,8 +33,40 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
 builder.Services.AddSingleton<ICartService, CartService>();
 
 builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<AppUser>()
-    .AddEntityFrameworkStores<StoreContext>();
+builder.Services.AddIdentityApiEndpoints<AppUser>(options =>
+{
+    // Configure password requirements
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 1;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+})
+.AddEntityFrameworkStores<StoreContext>();
+
+// Configure both Application and Bearer cookies for Identity API
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = false; // Allow JavaScript access for debugging
+    options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Allow HTTP for dev
+    options.Cookie.SameSite = SameSiteMode.Lax; // Standard for same-origin
+    options.Cookie.Path = "/";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.SlidingExpiration = true;
+    options.Cookie.Name = "SkishopAuth";
+});
+
+// Configure Identity API specific cookies
+builder.Services.Configure<CookieAuthenticationOptions>("Identity.Application", options =>
+{
+    options.Cookie.HttpOnly = false;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Allow HTTP for dev
+    options.Cookie.SameSite = SameSiteMode.Lax; // Standard for same-origin
+    options.Cookie.Path = "/";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.SlidingExpiration = true;
+    options.Cookie.Name = "SkishopIdentity";
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -48,10 +83,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://localhost:4200", "http://localhost:4200"));
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials()
+    .WithOrigins("http://localhost:4200")
+    .SetPreflightMaxAge(TimeSpan.FromDays(1)));
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
@@ -63,7 +101,8 @@ try
     using var scoper = app.Services.CreateScope();
     var services = scoper.ServiceProvider;
     var context = services.GetRequiredService<StoreContext>();
-    await StoreContextSeed.SeedAsync(context);
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    await StoreContextSeed.SeedAsync(context, userManager);
 
 }
 catch (Exception ex)

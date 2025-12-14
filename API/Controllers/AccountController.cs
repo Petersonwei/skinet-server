@@ -49,9 +49,9 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
     [HttpGet("user-info")]
     public async Task<ActionResult> GetUserInfo()
     {
-        if (User.Identity?.IsAuthenticated == false)
+        if (User.Identity?.IsAuthenticated != true)
         {
-            return NoContent();
+            return Unauthorized();
         }
 
         var user = await signInManager.UserManager.GetUserByEmailWithAddress(User);

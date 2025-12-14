@@ -18,6 +18,5 @@ public class StoreContextSeed
             context.Products.AddRange(products);
             await context.SaveChangesAsync();
         }
-
     }
 }

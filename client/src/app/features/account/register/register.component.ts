@@ -28,6 +28,8 @@ export class RegisterComponent {
   private router = inject(Router);
   private snack = inject(SnackBarService);
 
+  validationErrors?: string[];
+
   registerForm = this.fb.group({
     firstName: [''],
     lastName: [''],
@@ -40,6 +42,9 @@ export class RegisterComponent {
       next: () => {
         this.snack.success('Registration successful. You can now log in');
         this.router.navigateByUrl('/account/login');
+      },
+      error: (errors) => {
+        this.validationErrors = errors;
       }
     });
   }

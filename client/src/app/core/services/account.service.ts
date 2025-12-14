@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { User, Address } from '../../shared/models/user';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +22,12 @@ export class AccountService {
   }
 
   getUserInfo() {
-    return this.http.get<User>(this.baseUrl + 'account/user-info', { withCredentials: true }).subscribe({
-      next: user => this.currentUser.set(user)
-    });
+    return this.http.get<User>(this.baseUrl + 'account/user-info', { withCredentials: true }).pipe(
+      map(user => {
+        this.currentUser.set(user);
+        return user;
+      })
+    );
   }
 
   logout() {

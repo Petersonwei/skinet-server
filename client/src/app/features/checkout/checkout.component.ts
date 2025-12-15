@@ -1,16 +1,16 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { OrderSummaryComponent } from '../../shared/components/order-summary/order-summary.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
 import { RouterLink } from '@angular/router';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, JsonPipe } from '@angular/common';
 import { StripeService } from '../../core/services/stripe.service';
 import { SnackBarService } from '../../core/services/snack-bar.service';
 import { AccountService } from '../../core/services/account.service';
 import { CartService } from '../../core/services/cart.service';
-import { StripeAddressElement, StripePaymentElement } from '@stripe/stripe-js';
+import { StripeAddressElement, StripePaymentElement, StripeAddressElementChangeEvent, StripePaymentElementChangeEvent } from '@stripe/stripe-js';
 import { Address } from '../../shared/models/user';
 import { firstValueFrom } from 'rxjs';
 import { CheckoutDeliveryComponent } from './checkout-delivery/checkout-delivery.component';
@@ -18,7 +18,7 @@ import { CheckoutReviewComponent } from './checkout-review/checkout-review.compo
 
 @Component({
   selector: 'app-checkout',
-  imports: [OrderSummaryComponent, MatStepperModule, MatButtonModule, MatCheckboxModule, RouterLink, CurrencyPipe, CheckoutDeliveryComponent, CheckoutReviewComponent],
+  imports: [OrderSummaryComponent, MatStepperModule, MatButtonModule, MatCheckboxModule, RouterLink, CurrencyPipe, JsonPipe, CheckoutDeliveryComponent, CheckoutReviewComponent],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
 })
@@ -31,13 +31,21 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   paymentElement?: StripePaymentElement;
   saveAddress = false;
 
+  completionStatus = signal<{address: boolean; card: boolean; delivery: boolean}>({
+    address: false,
+    card: false,
+    delivery: false
+  });
+
   async ngOnInit() {
     try {
       this.addressElement = await this.stripeService.createAddressElement();
       this.addressElement.mount('#address-element');
+      this.addressElement.on('change', this.handleAddressChange);
 
       this.paymentElement = await this.stripeService.createPaymentElement();
       this.paymentElement.mount('#payment-element');
+      this.paymentElement.on('change', this.handlePaymentChange);
     } catch (error: any) {
       this.snackBar.error(error.message);
     }
@@ -45,6 +53,27 @@ export class CheckoutComponent implements OnInit, OnDestroy {
 
   onSaveAddressCheckboxChange(event: MatCheckboxChange) {
     this.saveAddress = event.checked;
+  }
+
+  handleAddressChange = (event: StripeAddressElementChangeEvent) => {
+    this.completionStatus.update(state => {
+      state.address = event.complete;
+      return state;
+    });
+  }
+
+  handlePaymentChange = (event: StripePaymentElementChangeEvent) => {
+    this.completionStatus.update(state => {
+      state.card = event.complete;
+      return state;
+    });
+  }
+
+  handleDeliveryChange(event: boolean) {
+    this.completionStatus.update(state => {
+      state.delivery = event;
+      return state;
+    });
   }
 
   async onStepChange(event: StepperSelectionEvent) {

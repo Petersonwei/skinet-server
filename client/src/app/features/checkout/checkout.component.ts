@@ -11,10 +11,11 @@ import { AccountService } from '../../core/services/account.service';
 import { StripeAddressElement } from '@stripe/stripe-js';
 import { Address } from '../../shared/models/user';
 import { firstValueFrom } from 'rxjs';
+import { CheckoutDeliveryComponent } from './checkout-delivery/checkout-delivery.component';
 
 @Component({
   selector: 'app-checkout',
-  imports: [OrderSummaryComponent, MatStepperModule, MatButtonModule, MatCheckboxModule, RouterLink],
+  imports: [OrderSummaryComponent, MatStepperModule, MatButtonModule, MatCheckboxModule, RouterLink, CheckoutDeliveryComponent],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
 })

@@ -1,7 +1,7 @@
 <div class="flex mt-32 gap-6">
   <div class="w-3/4">
-    <mat-stepper #stepper class="bg-white border border-gray-200 shadow-sm" (selectionChange)="onStepChange($event)">
-      <mat-step label="Address">
+    <mat-stepper #stepper [linear]="true" class="bg-white border border-gray-200 shadow-sm" (selectionChange)="onStepChange($event)">
+      <mat-step label="Address" [completed]="completionStatus().address">
         <div id="address-element"></div>
         <div class="flex justify-end mt-1">
           <mat-checkbox [checked]="saveAddress" (change)="onSaveAddressCheckboxChange($event)">
@@ -10,21 +10,21 @@
         </div>
         <div class="flex justify-between mt-6">
           <button mat-stroked-button routerLink="/shop" class="z-0">Continue Shopping</button>
-          <button mat-flat-button matStepperNext class="z-0">Next</button>
+          <button mat-flat-button matStepperNext [disabled]="!completionStatus().address" class="z-0">Next</button>
         </div>
       </mat-step>
-      <mat-step label="Delivery">
+      <mat-step label="Delivery" [completed]="completionStatus().delivery">
         <app-checkout-delivery (deliveryComplete)="handleDeliveryChange($event)" />
         <div class="flex justify-between mt-6">
           <button mat-stroked-button matStepperPrevious>Back</button>
-          <button mat-flat-button matStepperNext>Next</button>
+          <button mat-flat-button matStepperNext [disabled]="!completionStatus().delivery">Next</button>
         </div>
       </mat-step>
-      <mat-step label="Payment">
+      <mat-step label="Payment" [completed]="completionStatus().card">
         <div id="payment-element"></div>
         <div class="flex justify-between mt-6">
           <button mat-stroked-button matStepperPrevious>Back</button>
-          <button mat-flat-button matStepperNext>Next</button>
+          <button mat-flat-button matStepperNext [disabled]="!completionStatus().card">Next</button>
         </div>
       </mat-step>
       <mat-step label="Review">
@@ -35,8 +35,6 @@
         </div>
       </mat-step>
     </mat-stepper>
-
-    <pre>{{ completionStatus() | json }}</pre>
   </div>
   <div class="w-1/4">
     <app-order-summary />

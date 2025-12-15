@@ -5,17 +5,20 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
 import { RouterLink } from '@angular/router';
+import { CurrencyPipe } from '@angular/common';
 import { StripeService } from '../../core/services/stripe.service';
 import { SnackBarService } from '../../core/services/snack-bar.service';
 import { AccountService } from '../../core/services/account.service';
+import { CartService } from '../../core/services/cart.service';
 import { StripeAddressElement, StripePaymentElement } from '@stripe/stripe-js';
 import { Address } from '../../shared/models/user';
 import { firstValueFrom } from 'rxjs';
 import { CheckoutDeliveryComponent } from './checkout-delivery/checkout-delivery.component';
+import { CheckoutReviewComponent } from './checkout-review/checkout-review.component';
 
 @Component({
   selector: 'app-checkout',
-  imports: [OrderSummaryComponent, MatStepperModule, MatButtonModule, MatCheckboxModule, RouterLink, CheckoutDeliveryComponent],
+  imports: [OrderSummaryComponent, MatStepperModule, MatButtonModule, MatCheckboxModule, RouterLink, CurrencyPipe, CheckoutDeliveryComponent, CheckoutReviewComponent],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
 })
@@ -23,6 +26,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   private stripeService = inject(StripeService);
   private snackBar = inject(SnackBarService);
   private accountService = inject(AccountService);
+  cartService = inject(CartService);
   addressElement?: StripeAddressElement;
   paymentElement?: StripePaymentElement;
   saveAddress = false;

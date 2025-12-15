@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { CartService } from './cart.service';
-import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js';
+import { loadStripe, Stripe, StripeElements, StripeAddressElement, StripeAddressElementOptions } from '@stripe/stripe-js';
 import { firstValueFrom, map } from 'rxjs';
 import { CartType } from '../../shared/models/cart';
 
@@ -15,6 +15,7 @@ export class StripeService {
   baseUrl = environment.apiUrl;
   private cartService = inject(CartService);
   private elements?: StripeElements;
+  addressElement?: StripeAddressElement;
 
   constructor() {
     this.stripePromise = loadStripe(environment.stripePublicKey);
@@ -52,5 +53,20 @@ export class StripeService {
       }
     }
     return this.elements;
+  }
+
+  async createAddressElement() {
+    if (!this.addressElement) {
+      const elements = await this.initializeElements();
+      if (elements) {
+        const options: StripeAddressElementOptions = {
+          mode: 'shipping'
+        };
+        this.addressElement = elements.create('address', options);
+      } else {
+        throw new Error('Elements instance has not been loaded');
+      }
+    }
+    return this.addressElement;
   }
 }

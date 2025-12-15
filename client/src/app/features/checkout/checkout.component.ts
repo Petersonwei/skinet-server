@@ -8,7 +8,7 @@ import { RouterLink } from '@angular/router';
 import { StripeService } from '../../core/services/stripe.service';
 import { SnackBarService } from '../../core/services/snack-bar.service';
 import { AccountService } from '../../core/services/account.service';
-import { StripeAddressElement } from '@stripe/stripe-js';
+import { StripeAddressElement, StripePaymentElement } from '@stripe/stripe-js';
 import { Address } from '../../shared/models/user';
 import { firstValueFrom } from 'rxjs';
 import { CheckoutDeliveryComponent } from './checkout-delivery/checkout-delivery.component';
@@ -24,12 +24,16 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   private snackBar = inject(SnackBarService);
   private accountService = inject(AccountService);
   addressElement?: StripeAddressElement;
+  paymentElement?: StripePaymentElement;
   saveAddress = false;
 
   async ngOnInit() {
     try {
       this.addressElement = await this.stripeService.createAddressElement();
       this.addressElement.mount('#address-element');
+
+      this.paymentElement = await this.stripeService.createPaymentElement();
+      this.paymentElement.mount('#payment-element');
     } catch (error: any) {
       this.snackBar.error(error.message);
     }

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Cart, CartItem, CartType } from '../../shared/models/cart';
 import { Product } from '../../shared/models/product';
+import { DeliveryMethod } from '../../shared/models/delivery-method';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class CartService {
   baseUrl = 'http://localhost:5024/api/';
   private http = inject(HttpClient);
   cart = signal<CartType | null>(null);
+  selectedDelivery = signal<DeliveryMethod | null>(null);
 
   itemCount = computed(() => {
     return this.cart()?.items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
@@ -21,8 +23,9 @@ export class CartService {
     const cart = this.cart();
     if (!cart) return null;
 
+    const delivery = this.selectedDelivery();
     const subtotal = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const shipping = 0;
+    const shipping = delivery ? delivery.price : 0;
     const discount = 0;
 
     return {

@@ -1,1 +1,35 @@
-<p>checkout-success works!</p>
+<section class="bg-white py-16 mt-32">
+  <div class="mx-auto max-w-2xl px-4">
+    <h2 class="font-semibold text-2xl mb-2">Thanks for your fake order!</h2>
+    <p class="text-gray-500 mb-8">
+      Your order <span class="font-medium">#42</span> will never be processed. As this is a fake shop, we will not notify you once your order has not shipped.
+    </p>
+
+    <div class="space-y-2 rounded-lg border border-gray-100 bg-gray-50 p-6 mb-8">
+      <dl class="flex items-center justify-between gap-4">
+        <dt class="font-normal text-gray-500">Date</dt>
+        <dd class="font-medium text-gray-900 text-end">20th Sep 2024</dd>
+      </dl>
+
+      <dl class="flex items-center justify-between gap-4">
+        <dt class="font-normal text-gray-500">Payment Method</dt>
+        <dd class="font-medium text-gray-900 text-end">Visa</dd>
+      </dl>
+
+      <dl class="flex items-center justify-between gap-4">
+        <dt class="font-normal text-gray-500">Address</dt>
+        <dd class="font-medium text-gray-900 text-end">Address goes here</dd>
+      </dl>
+
+      <dl class="flex items-center justify-between gap-4">
+        <dt class="font-normal text-gray-500">Amount</dt>
+        <dd class="font-medium text-gray-900 text-end">$100</dd>
+      </dl>
+    </div>
+
+    <div class="flex items-center space-x-4">
+      <a mat-flat-button routerLink="/orders/42">View your order</a>
+      <a mat-stroked-button routerLink="/shop">Continue shopping</a>
+    </div>
+  </div>
+</section>

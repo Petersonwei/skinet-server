@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { User, Address } from '../../shared/models/user';
-import { map, catchError } from 'rxjs';
+import { map, catchError, tap } from 'rxjs';
 import { of } from 'rxjs';
 
 @Injectable({
@@ -40,7 +40,16 @@ export class AccountService {
   }
 
   updateAddress(address: Address) {
-    return this.http.post(this.baseUrl + 'account/address', address);
+    return this.http.post(this.baseUrl + 'account/address', address).pipe(
+      tap(() => {
+        this.currentUser.update(user => {
+          if (user) {
+            user.address = address;
+          }
+          return user;
+        });
+      })
+    );
   }
 
   getAuthState() {

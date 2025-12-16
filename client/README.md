@@ -54,6 +54,77 @@ ng e2e
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
+## Stripe Configuration
+
+This application uses Stripe for payment processing. Before running the application, you need to configure your Stripe keys:
+
+### Setup Instructions
+
+1. **Create environment files from examples**:
+   ```bash
+   # Copy example files to create your environment files
+   cp src/environments/environment.development.ts.example src/environments/environment.development.ts
+   cp src/environments/environment.ts.example src/environments/environment.ts
+   ```
+
+2. **Get your Stripe API keys**:
+   - Go to [Stripe Dashboard](https://dashboard.stripe.com/)
+   - Navigate to Developers → API keys
+   - Copy your publishable keys (starts with `pk_test_` for test mode or `pk_live_` for live mode)
+
+3. **Update your environment files**:
+   - **Development**: Edit `src/environments/environment.development.ts`
+     ```typescript
+     stripePublicKey: 'pk_test_your_actual_stripe_test_key_here'
+     ```
+   - **Production**: Edit `src/environments/environment.ts`
+     ```typescript
+     stripePublicKey: 'pk_live_your_actual_stripe_live_key_here'
+     ```
+
+4. **Important Security Notes**:
+   - Environment files are excluded from Git via `.gitignore`
+   - Never commit your actual Stripe keys to version control
+   - Use test keys (`pk_test_`) during development
+   - Use live keys (`pk_live_`) only in production
+   - Only the `.example` files are tracked in Git
+
+### Testing with Stripe
+
+This application uses Stripe test mode for development. You can test payments using the following test card numbers:
+
+#### Successful Payments
+- **Visa**: `4242 4242 4242 4242`
+- **Mastercard**: `5555 5555 5555 4444`
+- **American Express**: `3782 822463 10005`
+
+#### Declined Payments
+- **Generic decline**: `4000 0000 0000 0002`
+- **Insufficient funds**: `4000 0000 0000 9995`
+- **Lost card**: `4000 0000 0000 9987`
+- **Stolen card**: `4000 0000 0000 9979`
+
+#### 3D Secure Authentication
+- **Requires authentication**: `4000 0000 0000 3220`
+- **Always authenticate**: `4000 0002 7600 0016`
+
+#### Additional Test Details
+- **Expiry**: Any future date (e.g., `12/25`, `01/26`)
+- **CVC**: Any 3 digits (e.g., `123`, `456`)
+- **ZIP**: Any valid ZIP code
+
+For more test card numbers and scenarios, visit the [Stripe Testing Documentation](https://stripe.com/docs/testing#cards).
+
+### Environment Files Structure
+
+```typescript
+export const environment = {
+  production: boolean,
+  apiUrl: string,
+  stripePublicKey: string  // Replace with your actual Stripe publishable key
+};
+```
+
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

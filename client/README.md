@@ -89,6 +89,32 @@ This application uses Stripe for payment processing. Before running the applicat
    - Use live keys (`pk_live_`) only in production
    - Only the `.example` files are tracked in Git
 
+### Testing with Stripe
+
+This application uses Stripe test mode for development. You can test payments using the following test card numbers:
+
+#### Successful Payments
+- **Visa**: `4242 4242 4242 4242`
+- **Mastercard**: `5555 5555 5555 4444`
+- **American Express**: `3782 822463 10005`
+
+#### Declined Payments
+- **Generic decline**: `4000 0000 0000 0002`
+- **Insufficient funds**: `4000 0000 0000 9995`
+- **Lost card**: `4000 0000 0000 9987`
+- **Stolen card**: `4000 0000 0000 9979`
+
+#### 3D Secure Authentication
+- **Requires authentication**: `4000 0000 0000 3220`
+- **Always authenticate**: `4000 0002 7600 0016`
+
+#### Additional Test Details
+- **Expiry**: Any future date (e.g., `12/25`, `01/26`)
+- **CVC**: Any 3 digits (e.g., `123`, `456`)
+- **ZIP**: Any valid ZIP code
+
+For more test card numbers and scenarios, visit the [Stripe Testing Documentation](https://stripe.com/docs/testing#cards).
+
 ### Environment Files Structure
 
 ```typescript

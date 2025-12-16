@@ -6,6 +6,11 @@
 # dotenv files
 .env
 
+# Environment files with sensitive keys
+client/src/environments/environment.development.ts
+client/src/environments/environment.ts
+API/appsettings.Development.json
+
 # User-specific files
 *.rsuser
 *.suo

@@ -85,6 +85,10 @@ export class CartService {
     }
   }
 
+  clearCart() {
+    this.deleteCart();
+  }
+
   private createCart(): Cart {
     const cart = new Cart();
     localStorage.setItem('cart_id', cart.id);

@@ -1,10 +1,10 @@
 import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { OrderSummaryComponent } from '../../shared/components/order-summary/order-summary.component';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStepperModule, MatStepper } from '@angular/material/stepper';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
 import { StripeService } from '../../core/services/stripe.service';
 import { SnackBarService } from '../../core/services/snack-bar.service';
@@ -26,6 +26,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   private stripeService = inject(StripeService);
   private snackBar = inject(SnackBarService);
   private accountService = inject(AccountService);
+  private router = inject(Router);
   cartService = inject(CartService);
   addressElement?: StripeAddressElement;
   paymentElement?: StripePaymentElement;
@@ -89,6 +90,24 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       } catch (error: any) {
         this.snackBar.error(error.message);
       }
+    }
+  }
+
+  async confirmPayment(stepper: MatStepper) {
+    try {
+      if (this.confirmationToken) {
+        const result = await this.stripeService.confirmPayment(this.confirmationToken);
+        if (result.error) {
+          throw new Error(result.error.message);
+        }
+
+        this.cartService.clearCart();
+        this.cartService.selectedDelivery.set(null);
+        this.router.navigateByUrl('/checkout/success');
+      }
+    } catch (error: any) {
+      this.snackBar.error(error.message || 'Something went wrong');
+      stepper.previous();
     }
   }
 

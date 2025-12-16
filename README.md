@@ -76,18 +76,18 @@ Each component has its own detailed documentation:
 
 ## Features
 
-### 🛍️ E-commerce Functionality
+###  E-commerce Functionality
 - Product catalog with filtering and search
 - Shopping cart management
 - User authentication and registration
 - Order management
 
-### 💳 Payment Processing
+### Payment Processing
 - Stripe integration for secure payments
 - Multiple payment methods support
 - Test mode for development
 
-### 🎯 User Experience
+### User Experience
 - Responsive design with Tailwind CSS
 - Material Design components
 - Progressive checkout flow

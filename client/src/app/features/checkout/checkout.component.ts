@@ -10,7 +10,7 @@ import { StripeService } from '../../core/services/stripe.service';
 import { SnackBarService } from '../../core/services/snack-bar.service';
 import { AccountService } from '../../core/services/account.service';
 import { CartService } from '../../core/services/cart.service';
-import { StripeAddressElement, StripePaymentElement, StripeAddressElementChangeEvent, StripePaymentElementChangeEvent } from '@stripe/stripe-js';
+import { StripeAddressElement, StripePaymentElement, StripeAddressElementChangeEvent, StripePaymentElementChangeEvent, ConfirmationToken } from '@stripe/stripe-js';
 import { Address } from '../../shared/models/user';
 import { firstValueFrom } from 'rxjs';
 import { CheckoutDeliveryComponent } from './checkout-delivery/checkout-delivery.component';
@@ -30,6 +30,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   addressElement?: StripeAddressElement;
   paymentElement?: StripePaymentElement;
   saveAddress = false;
+  confirmationToken?: ConfirmationToken;
 
   completionStatus = signal<{address: boolean; card: boolean; delivery: boolean}>({
     address: false,
@@ -76,6 +77,21 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     });
   }
 
+  async getConfirmationToken() {
+    if (Object.values(this.completionStatus()).every(status => status === true)) {
+      try {
+        const result = await this.stripeService.createConfirmationToken();
+        if (result.error) {
+          throw new Error(result.error.message);
+        }
+        this.confirmationToken = result.confirmationToken;
+        console.log('Confirmation token:', this.confirmationToken);
+      } catch (error: any) {
+        this.snackBar.error(error.message);
+      }
+    }
+  }
+
   async onStepChange(event: StepperSelectionEvent) {
     if (event.selectedIndex === 1 && this.saveAddress) {
       const address = await this.getAddressFromStripeAddress();
@@ -85,6 +101,9 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     }
     if (event.selectedIndex === 2) {
       await firstValueFrom(this.stripeService.createOrUpdatePaymentIntent());
+    }
+    if (event.selectedIndex === 3) {
+      await this.getConfirmationToken();
     }
   }
 

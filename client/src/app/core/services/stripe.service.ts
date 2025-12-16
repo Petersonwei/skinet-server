@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { CartService } from './cart.service';
 import { AccountService } from './account.service';
-import { loadStripe, Stripe, StripeElements, StripeAddressElement, StripeAddressElementOptions, StripePaymentElement } from '@stripe/stripe-js';
+import { loadStripe, Stripe, StripeElements, StripeAddressElement, StripeAddressElementOptions, StripePaymentElement, ConfirmationToken } from '@stripe/stripe-js';
 import { firstValueFrom, map } from 'rxjs';
 import { CartType } from '../../shared/models/cart';
 
@@ -26,6 +26,24 @@ export class StripeService {
 
   getStripeInstance() {
     return this.stripePromise;
+  }
+
+  async createConfirmationToken() {
+    const stripe = await this.getStripeInstance();
+    const elements = await this.initializeElements();
+
+    const result = await elements.submit();
+    if (result.error) {
+      throw new Error(result.error.message);
+    }
+
+    if (!stripe) {
+      throw new Error('Stripe not available');
+    }
+
+    return await stripe.createConfirmationToken({
+      elements
+    });
   }
 
   createOrUpdatePaymentIntent() {

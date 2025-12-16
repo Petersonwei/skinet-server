@@ -5,7 +5,7 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule, MatCheckboxChange } from '@angular/material/checkbox';
 import { RouterLink } from '@angular/router';
-import { CurrencyPipe, JsonPipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { StripeService } from '../../core/services/stripe.service';
 import { SnackBarService } from '../../core/services/snack-bar.service';
 import { AccountService } from '../../core/services/account.service';
@@ -18,7 +18,7 @@ import { CheckoutReviewComponent } from './checkout-review/checkout-review.compo
 
 @Component({
   selector: 'app-checkout',
-  imports: [OrderSummaryComponent, MatStepperModule, MatButtonModule, MatCheckboxModule, RouterLink, CurrencyPipe, JsonPipe, CheckoutDeliveryComponent, CheckoutReviewComponent],
+  imports: [OrderSummaryComponent, MatStepperModule, MatButtonModule, MatCheckboxModule, RouterLink, CurrencyPipe, CheckoutDeliveryComponent, CheckoutReviewComponent],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.scss'
 })

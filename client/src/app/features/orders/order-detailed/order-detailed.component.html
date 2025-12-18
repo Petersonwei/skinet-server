@@ -1,7 +1,12 @@
 @if (order) {
   <mat-card class="bg-white py-8 shadow-md max-w-screen-lg mx-auto mt-32">
     <div class="mx-auto px-4 w-full">
-      <h2 class="text-2xl text-center font-semibold">Order Summary for Order #{{ order.id }}</h2>
+      <div class="flex justify-between items-center">
+        <h2 class="text-2xl text-center font-semibold">Order Summary for Order #{{ order.id }}</h2>
+        <button mat-stroked-button routerLink="/orders" class="items-center align-middle">
+          Return to Orders
+        </button>
+      </div>
 
       <div class="mt-8 pt-3 border-t border-gray-200 flex gap-16">
         <div class="space-y-2">
@@ -9,12 +14,12 @@
 
           <dl>
             <dt class="font-medium">Shipping Address</dt>
-            <dd class="mt-1 font-light">Address goes here</dd>
+            <dd class="mt-1 font-light">{{ order.shippingAddress | address }}</dd>
           </dl>
 
           <dl>
             <dt class="font-medium">Payment Info</dt>
-            <dd class="mt-1 font-light">Payment info goes here</dd>
+            <dd class="mt-1 font-light">{{ order.paymentSummary | paymentCard }}</dd>
           </dl>
         </div>
 

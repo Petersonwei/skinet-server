@@ -12,6 +12,8 @@ public interface ISpecification<T>
     int Take { get; }
     int Skip { get; }
     bool IsPagingEnabled { get; }
+    List<Expression<Func<T, object>>> Includes { get; }
+    List<string> IncludeStrings { get; } // for LINQ Include
     IQueryable<T> ApplyCriteria(IQueryable<T> query);
 }
 

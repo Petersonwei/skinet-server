@@ -23,4 +23,9 @@ public class Order : BaseEntity
 
     [Required]
     public required string PaymentIntentId { get; set; }
+
+    public decimal GetTotal()
+    {
+        return Subtotal + DeliveryMethod.Price;
+    }
 }

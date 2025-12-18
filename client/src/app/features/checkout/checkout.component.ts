@@ -147,7 +147,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   private async createOrderModel(): Promise<OrderToCreate> {
     const cart = this.cartService.cart();
     const shippingAddress = await this.getAddressFromStripeAddress() as ShippingAddress;
-    const card = this.confirmationToken?.payment_method?.card;
+    const card = this.confirmationToken?.payment_method_preview?.card;
 
     if (!cart?.id || !cart.deliveryMethodId || !card || !shippingAddress) {
       throw new Error('Problem creating order');
@@ -156,7 +156,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     return {
       cartId: cart.id,
       paymentSummary: {
-        last4: +card.last4,
+        last4: card.last4,
         brand: card.brand,
         expMonth: card.exp_month,
         expYear: card.exp_year

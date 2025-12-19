@@ -64,11 +64,31 @@ public class PaymentService : IPaymentService
         }
         else
         {
-            var options = new PaymentIntentUpdateOptions
+            // Get the existing PaymentIntent to check its status
+            intent = await service.GetAsync(cart.PaymentIntentId);
+
+            // Only update if the PaymentIntent hasn't succeeded yet
+            if (intent.Status != "succeeded")
             {
-                Amount = amount
-            };
-            intent = await service.UpdateAsync(cart.PaymentIntentId, options);
+                var options = new PaymentIntentUpdateOptions
+                {
+                    Amount = amount
+                };
+                intent = await service.UpdateAsync(cart.PaymentIntentId, options);
+            }
+            else
+            {
+                // If succeeded, create a new PaymentIntent
+                var options = new PaymentIntentCreateOptions
+                {
+                    Amount = amount,
+                    Currency = "usd",
+                    PaymentMethodTypes = new List<string> { "card" }
+                };
+                intent = await service.CreateAsync(options);
+                cart.PaymentIntentId = intent.Id;
+                cart.ClientSecret = intent.ClientSecret;
+            }
         }
 
         await _cartService.SetCartAsync(cart);

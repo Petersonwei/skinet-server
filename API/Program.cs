@@ -31,6 +31,8 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
 
 builder.Services.AddSingleton<ICartService, CartService>();
 
+builder.Services.AddSignalR();
+
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<AppUser>()
     .AddEntityFrameworkStores<StoreContext>();
@@ -84,6 +86,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<API.SignalR.NotificationHub>("/hub/notifications");
 
 app.MapGroup("/api").MapIdentityApi<AppUser>();
 

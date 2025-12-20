@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 import { DatePipe, CurrencyPipe } from '@angular/common';
 import { SignalrService } from '../../../core/services/signalr.service';
+import { OrderService } from '../../../core/services/order.service';
 import { AddressPipe } from '../../../shared/pipes/address-pipe';
 import { PaymentCardPipe } from '../../../shared/pipes/payment-card-pipe';
 
@@ -21,6 +22,12 @@ import { PaymentCardPipe } from '../../../shared/pipes/payment-card-pipe';
   templateUrl: './checkout-success.component.html',
   styleUrl: './checkout-success.component.scss'
 })
-export class CheckoutSuccessComponent {
+export class CheckoutSuccessComponent implements OnDestroy {
   signalrService = inject(SignalrService);
+  private orderService = inject(OrderService);
+
+  ngOnDestroy() {
+    this.orderService.orderComplete = false;
+    this.signalrService.orderSignal.set(null);
+  }
 }

@@ -77,6 +77,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionMiddleware>();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowCredentials()
     .WithOrigins("http://localhost:4200"));
 
@@ -90,6 +93,8 @@ app.MapControllers();
 app.MapHub<API.SignalR.NotificationHub>("/hub/notifications");
 
 app.MapGroup("/api").MapIdentityApi<AppUser>();
+
+app.MapFallbackToController("Index", "Fallback");
 
 try
 {
